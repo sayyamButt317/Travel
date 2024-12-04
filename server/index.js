@@ -1,19 +1,23 @@
-import dotenv from "dotenv";
 import { app } from "./App.js";
-import { connectionDB } from "./db/connection.js";
+import { CheckConnection } from "./Config/db.js";
+import userRouter from "./Routes/static.routes.js";
+import {createAllTable} from './Utils/dbUtils.js';
+const app = express();
+app.use(express.json());
 
-// Environment variable configuration
-dotenv.config(); // Loads environment variables from `.env` by default
+// API Routes
+app.use("/api/v1", userRouter);
 
-// Connect to MongoDB and Start Server
-connectionDB()
+
+// Connect Start Server
+CheckConnection()
   .then(() => {
-    const PORT = process.env.PORT || 8000;
-    app.listen(PORT, () => {
+    app.listen(3000, async() => {
+      await createAllTable()
       console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
     console.error("MongoDB connection failed:", err.message);
-    process.exit(1); // Exit the process if the DB connection fails
+    process.exit(1);
   });
