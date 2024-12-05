@@ -1,8 +1,12 @@
+import express from "express";
 import mysql2 from "mysql2/promise";
 import dotenv from "dotenv";
 
 dotenv.config();
 
+const PORT = process.env.PORT || 3000;
+
+// MySQL Connection Pool
 const pool = mysql2.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -13,16 +17,16 @@ const pool = mysql2.createPool({
   queueLimit: 0,
 });
 
+// Check MySQL Connection
 const CheckConnection = async () => {
   try {
     const connection = await pool.getConnection();
     console.log("Database Connection Successful ✔");
     connection.release();
-    return connection;
   } catch (error) {
-    console.log("Database Connection Failed ");
-    throw error
+    console.error("MySQL connection failed:", error.message);
+    throw error;
   }
 };
 
-export {pool, CheckConnection};
+export { pool, CheckConnection };
