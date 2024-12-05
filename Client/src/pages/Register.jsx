@@ -1,38 +1,42 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
-  // States for form inputs
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
-  // States for loading and error
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Handle the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     setIsLoading(true);
-    setError('');
-  
-    console.log("Form data:", { username, email, password }); // Add this line to check values
-  
+    setError("");
+
+    console.log("Form data:", { username, email, password }); 
+
     try {
-      const response = await axios.post("/api/sign-up", {
-        username,
-        email,
-        password,
-      }, {
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        "/api/sign-up",
+        {
+          Password: password,
+          Email: email,
+          RegistrationDate: new Date().toISOString(), 
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
-  
+      );
+    
+
       if (response.status === 200) {
-        alert("Registration successful");
+        navigate("/login");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
@@ -40,7 +44,6 @@ export default function SignUp() {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 dark:bg-gray-50 dark:text-gray-800">
@@ -51,9 +54,11 @@ export default function SignUp() {
       <form onSubmit={handleSubmit} className="space-y-12">
         <div className="space-y-4">
           <div>
-            <label htmlFor="username" className="block mb-2 text-sm">Username</label>
+            <label htmlFor="username" className="block mb-2 text-sm">
+              Username
+            </label>
             <input
-              type="text"
+              type="username"
               name="username"
               id="username"
               value={username}
@@ -64,7 +69,9 @@ export default function SignUp() {
             />
           </div>
           <div>
-            <label htmlFor="email" className="block mb-2 text-sm">Email address</label>
+            <label htmlFor="email" className="block mb-2 text-sm">
+              Email address
+            </label>
             <input
               type="email"
               name="email"
@@ -78,7 +85,9 @@ export default function SignUp() {
           </div>
           <div>
             <div className="flex justify-between mb-2">
-              <label htmlFor="password" className="text-sm">Password</label>
+              <label htmlFor="password" className="text-sm">
+                Password
+              </label>
             </div>
             <input
               type="password"
@@ -98,16 +107,23 @@ export default function SignUp() {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full px-8 py-3 font-semibold rounded-md ${loading ? 'bg-gray-400' : 'bg-violet-600'} dark:text-gray-50`}
+              className={`w-full px-8 py-3 font-semibold rounded-md ${
+                loading ? "bg-gray-400" : "bg-violet-600"
+              } dark:text-gray-50`}
             >
-              {loading ? 'Registering...' : 'Sign Up'}
+              {loading ? "Registering..." : "Sign Up"}
             </button>
           </div>
           <p className="px-6 text-sm text-center dark:text-gray-600">
-            Already have an Account?{' '}
-            <a rel="noopener noreferrer" href="/login" className="hover:underline dark:text-violet-600">
+            Already have an Account?{" "}
+            <a
+              rel="noopener noreferrer"
+              href="/login"
+              className="hover:underline dark:text-violet-600"
+            >
               Sign In
-            </a>.
+            </a>
+            .
           </p>
         </div>
       </form>

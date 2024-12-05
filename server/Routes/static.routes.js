@@ -16,18 +16,18 @@ router.get("/", async (req, res) => {
 
 
 router.post("/sign-up", async (req, res) => {
-  const { UserName, Password, Email, RegistrationDate } = req.body;
+  const { username, password, email, registrationDate } = req.body; // Match frontend keys
 
   try {
     const [result] = await pool.query(
       "INSERT INTO User (UserName, Password, Email, RegistrationDate) VALUES (?, ?, ?, ?)",
-      [UserName, Password, Email, RegistrationDate]
+      [username, password, email, registrationDate]
     );
-    
+
     res.status(200).json({
       status: 200,
       message: "User added successfully",
-      data: { UserID: result.insertId, UserName, Email, RegistrationDate },
+      data: { UserID: result.insertId, UserName: username, Email: email, RegistrationDate: registrationDate },
     });
   } catch (err) {
     console.error("Error during sign-up:", err.message);
@@ -42,29 +42,28 @@ router.post("/login", async (req, res) => {
 
   try {
     // Query the database to find the user by email
-    const [user] = await pool.query("SELECT * FROM User WHERE Email = ?", [Email]);
+    const [users] = await pool.query("SELECT * FROM User WHERE Email = ?", [Email]);
 
-    if (user.length === 0) {
+    // Check if the user exists
+    if (users.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
-    
-    if (user[0].Password !== Password) {
+
+    const user = users[0]; // Get the first user record
+
+    // Compare the provided password with the stored password
+    if (user.Password !== Password) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    res.status(200).json({
-      status: 200,
-      message: "Login successful",
-      data: {
-        UserID: user[0].UserID,
-        UserName: user[0].UserName,
-        Email: user[0].Email,
-      },
-    });
+    // Return success response
+    res.status(200).json({ message: "Login successful", userId: user.UserID });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Error during login:", err.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // Delete a user (sign-out)
 router.post("/sign-out", async (req, res) => {
