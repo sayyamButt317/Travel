@@ -16,18 +16,17 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       const options = {
-        method: "GET",
-        url: "https://tripadvisor16.p.rapidapi.com/api/v1/restaurant/searchRestaurants",
+        method: 'GET',
+        url: 'https://tripadvisor16.p.rapidapi.com/api/v1/restaurant/searchRestaurants',
         params: {
-          locationId: "304554",
+          locationId: '304554'
         },
         headers: {
-          "x-rapidapi-key":
-            "4118a2a362msha42669bdaffd95ep1f189fjsn416f92ff7392",
-          "x-rapidapi-host": "tripadvisor16.p.rapidapi.com",
-        },
+          'x-rapidapi-key': 'ebad227fdbmsh027357c06999193p15f212jsna6be2690c4da',
+          'x-rapidapi-host': 'tripadvisor16.p.rapidapi.com'
+        }
       };
-
+      
       try {
         const response = await axios.request(options);
         const restaurantData = response.data?.data?.data || [];
