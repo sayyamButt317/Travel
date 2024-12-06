@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import OnBoarding from "./pages/OnBoarding";
-
+import AddLocation from "./pages/AddLocation";
 const Home = () => {
   return (
     <BrowserRouter>
@@ -13,6 +13,7 @@ const Home = () => {
         <Route path="/sign-up" element={<Register/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/add-location" element={<AddLocation/>} />
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
     </BrowserRouter>

@@ -11,17 +11,15 @@ const CityTableQuery = `CREATE TABLE IF NOT EXISTS City (
   CityID INT AUTO_INCREMENT PRIMARY KEY,
   Country VARCHAR(255) NOT NULL,
   CityName VARCHAR(255) NOT NULL
-);
-;`;
+);`;
 
 const LocationTableQuery = `CREATE TABLE IF NOT EXISTS Location (
   LocationID INT AUTO_INCREMENT PRIMARY KEY,
   LocationName VARCHAR(255) NOT NULL,
-  CityID INT NOT NULL,
   Description VARCHAR(255),
+  CityID INT,
   FOREIGN KEY (CityID) REFERENCES City(CityID)
-);
-`;
+);`;
 
 const HotelTableQuery = `CREATE TABLE IF NOT EXISTS Hotel (
   HotelID INT AUTO_INCREMENT PRIMARY KEY,
@@ -30,8 +28,7 @@ const HotelTableQuery = `CREATE TABLE IF NOT EXISTS Hotel (
   Price DECIMAL(10, 2) NOT NULL,
   Rating INT NOT NULL,
   FOREIGN KEY (CityID) REFERENCES City(CityID)
-);
-`;
+);`;
 
 const BucketTableQuery = `CREATE TABLE IF NOT EXISTS Bucket (
   BucketListID INT AUTO_INCREMENT PRIMARY KEY,
@@ -40,8 +37,7 @@ const BucketTableQuery = `CREATE TABLE IF NOT EXISTS Bucket (
   Privacy ENUM('Public', 'Private') NOT NULL,
   CreationDate DATE NOT NULL,
   FOREIGN KEY (UserID) REFERENCES User(UserID)
-)
-;`;
+);`;
 
 const BucketListLocationsQuery = `CREATE TABLE IF NOT EXISTS BucketListLocations (
   BucketListID INT NOT NULL,
@@ -58,8 +54,7 @@ const JournalTableQuery = `CREATE TABLE IF NOT EXISTS Journal (
   Privacy ENUM('Public', 'Private') NOT NULL,
   CreationDate DATE NOT NULL,
   FOREIGN KEY (UserID) REFERENCES User(UserID)
-);
-`;
+);`;
 
 const LocationReviewTableQuery = `CREATE TABLE IF NOT EXISTS LocationReview (
   ReviewID INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,8 +65,7 @@ const LocationReviewTableQuery = `CREATE TABLE IF NOT EXISTS LocationReview (
   SubmissionDate DATE NOT NULL,
   FOREIGN KEY (LocationID) REFERENCES Location(LocationID),
   FOREIGN KEY (UserID) REFERENCES User(UserID)
-);
-`;
+);`;
 
 const HotelReviewTableQuery = `CREATE TABLE IF NOT EXISTS HotelReview (
   ReviewID INT AUTO_INCREMENT PRIMARY KEY,
@@ -95,14 +89,15 @@ const createTable = async (tableName, query) => {
 
 const createAllTable = async () => {
   try {
+
     await createTable("User", userTableQuery);
     await createTable("City", CityTableQuery);
     await createTable("Location", LocationTableQuery);
-    await createTable("Hotel", HotelTableQuery);
     await createTable("BucketList", BucketTableQuery);
     await createTable("BucketListLocations", BucketListLocationsQuery);
     await createTable("Journal", JournalTableQuery);
     await createTable("LocationReview", LocationReviewTableQuery);
+    await createTable("Hotel", HotelTableQuery);
     await createTable("HotelReview", HotelReviewTableQuery);
     console.log("All tables created successfully.");
   } catch (error) {
